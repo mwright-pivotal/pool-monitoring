@@ -1,0 +1,19 @@
+#google-token: 
+docker-image: mwrightregistry.azurecr.io/cruiseline-venues-aks:latest
+docker-registry: mwrightregistry.azurecr.io
+docker-username: 
+docker-password: 
+
+snyk-token: #go to snyk.io and setup a trial account, grab the token from your profile
+ 
+kube-config-aks: |
+  apiVersion: v1
+  clusters:
+  - cluster:
+  #... replace with your aks config
+
+kube-config-pks: |
+  apiVersion: v1
+  clusters:
+  - cluster:
+  #.... replace with your pks config

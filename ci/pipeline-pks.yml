@@ -1,0 +1,107 @@
+resource_types:
+  - name: kubernetes
+    type: docker-image
+    source:
+      repository: zlabjp/kubernetes-resource
+      tag: "1.14"
+
+resources:
+  - name: venues
+    type: git
+    check_every: 10s
+    source:
+      uri: https://github.com/mwright-pivotal/cruiseline-venues.git
+      branch: master
+  - name: kubernetes-dev
+    type: kubernetes
+    source:
+      kubeconfig: ((kube-config-aks))
+      context: pbs-dev
+
+jobs:
+  - name: Build & Test
+    serial: true
+    public: true
+    plan:
+    - get: venues
+      trigger: true
+    - task: test
+      file: venues/ci/tasks/build.yml
+
+  - name: Vulnerability Scan using Snyk
+    serial: true
+    public: true
+    plan:
+    - get: venues
+      trigger: true
+    - task: scan
+      file: venues/ci/tasks/snyk.yml
+      vars:
+        REGISTRY_USERNAME: ((docker-username))
+        REGISTRY_PASSWORD: ((docker-password))
+      params:
+        SNYK_TOKEN: ((snyk-token))
+
+  - name: Dockerize with CNB
+    serial: true
+    public: true
+    plan:
+    - get: venues
+      trigger: true
+      passed: 
+        - Build & Test
+    - task: build-concourse-lifecycle-task-bionic-image
+      privileged: true
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source: 
+            repository: mwrightregistry.azurecr.io/lcycle-task
+            tag: latest
+            username: ((docker-username))
+            password: ((docker-password))
+        params:
+ #         RUN_AS: cnb
+          RUN_IMAGE: cnbs/run:latest
+          REPO_NAME: ((docker-image))
+          REGISTRY: ((docker-registry))
+          REGISTRY_USERNAME: ((docker-username))
+          REGISTRY_PASSWORD: ((docker-password))
+          APP_FOLDER: venues
+        inputs:
+        - name: venues
+        run: {path: /lifecycle-task/launch.sh}
+        caches:
+          - path: /layers
+          - path: /cache
+          
+  - name: Deploy to PKS (kapp)
+    serial: true
+    public: true
+    plan:
+    - get: venues
+      trigger: true
+      passed:
+        - Dockerize with CNB
+    - task: kapp deploy
+      file: venues/ci/tasks/kapp.yml
+      params:
+        KUBECONFIG_CONTENTS: ((kube-config-pks))
+      vars:
+        REGISTRY_USERNAME: ((docker-username))
+        REGISTRY_PASSWORD: ((docker-password))
+
+  - name: Deploy to AKS (k8s resource)
+    serial: true
+    public: true
+    plan:
+    - get: venues
+      trigger: true
+      passed:
+        - Dockerize with CNB
+    - put: kubernetes-dev
+      params:
+        kubectl: apply -f venues/k8s/deployment.yaml -f venues/k8s/svc.yaml
+        wait_until_ready_selector: app=venues
+

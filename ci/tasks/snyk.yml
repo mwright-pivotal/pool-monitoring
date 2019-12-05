@@ -1,0 +1,20 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: 
+    repository: mwrightregistry.azurecr.io/tools
+    tag: latest
+    username: ((REGISTRY_USERNAME))
+    password: ((REGISTRY_PASSWORD))
+
+inputs:
+  - name: venues
+
+params:
+  KUBECONFIG: 
+  CONTEXT: 
+  SNYK_TOKEN:
+
+run:
+  path: "venues/ci/tasks/snyk.sh"

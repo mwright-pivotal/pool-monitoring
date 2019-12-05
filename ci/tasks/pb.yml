@@ -1,0 +1,22 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: {repository: gcr.io/fe-mwright/cruiseline/pack, tag: latest}
+
+params:
+  GOOGLE_TOKEN:
+  KUBE_CONFIG:
+  DOCKER_IMAGE:
+  DOCKER_USERNAME:
+  DOCKER_PASSWORD:
+  DOCKER_REGISTRY:
+
+inputs:
+  - name: venue
+
+outputs:
+  - name: build-output
+
+run:
+  path: "venue/ci/tasks/pack.sh"
