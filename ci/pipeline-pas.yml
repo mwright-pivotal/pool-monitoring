@@ -3,7 +3,7 @@ resources:
     type: git
     check_every: 10s
     source:
-      uri: https://github.com/mwright-pivotal/cruiseline-venues.git
+      uri: ((repo))
       branch: master
 
   - name: resource-deploy-web-app

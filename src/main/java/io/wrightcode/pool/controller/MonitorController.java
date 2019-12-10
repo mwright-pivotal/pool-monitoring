@@ -22,13 +22,14 @@ public class MonitorController {
 	
 	@Autowired
 	MeterRegistry meterRegistry;
+	private AtomicLong ph = new AtomicLong(0);
 	
 	@RequestMapping(value="/status", method = RequestMethod.POST)
 	public void sendStatus(@RequestBody Status stat) {
 		stat.setTimeUpdated(new Date());
 		log.info("Received update: " + stat);
-		Gauge
-	      .builder("pool.phValue", () -> Long.parseLong(stat.getPhValue()) )
-	      .register(meterRegistry);
+		AtomicLong customGauge = meterRegistry.gauge("phValue", this.ph);
+		customGauge.set(Long.parseLong(stat.getPhValue()));
+		//customGauge.getAndSet(Long.parseLong(stat.getPhValue()));
 	}
 }
