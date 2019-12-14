@@ -6,11 +6,11 @@ resource_types:
       tag: "1.14"
 
 resources:
-  - name: venues
+  - name: pool-monitor
     type: git
     check_every: 10s
     source:
-      uri: https://github.com/mwright-pivotal/cruiseline-venues.git
+      uri: ((repo))
       branch: master
   - name: kubernetes-dev
     type: kubernetes
@@ -23,7 +23,7 @@ jobs:
     serial: true
     public: true
     plan:
-    - get: venues
+    - get: pool-monitor
       trigger: true
     - task: test
       file: venues/ci/tasks/build.yml
@@ -32,10 +32,10 @@ jobs:
     serial: true
     public: true
     plan:
-    - get: venues
+    - get: pool-monitor
       trigger: true
     - task: scan
-      file: venues/ci/tasks/snyk.yml
+      file: pool-monitor/ci/tasks/snyk.yml
       vars:
         REGISTRY_USERNAME: ((docker-username))
         REGISTRY_PASSWORD: ((docker-password))
@@ -46,7 +46,7 @@ jobs:
     serial: true
     public: true
     plan:
-    - get: venues
+    - get: pool-monitor
       trigger: true
       passed: 
         - Build & Test
@@ -68,9 +68,9 @@ jobs:
           REGISTRY: ((docker-registry))
           REGISTRY_USERNAME: ((docker-username))
           REGISTRY_PASSWORD: ((docker-password))
-          APP_FOLDER: venues
+          APP_FOLDER: pool-monitor
         inputs:
-        - name: venues
+        - name: pool-monitor
         run: {path: /lifecycle-task/launch.sh}
         caches:
           - path: /layers
@@ -80,7 +80,7 @@ jobs:
     serial: true
     public: true
     plan:
-    - get: venues
+    - get: pool-monitor
       trigger: true
       passed:
         - Dockerize with CNB
@@ -96,12 +96,12 @@ jobs:
     serial: true
     public: true
     plan:
-    - get: venues
+    - get: pool-monitor
       trigger: true
       passed:
         - Dockerize with CNB
     - put: kubernetes-dev
       params:
-        kubectl: apply -f venues/k8s/deployment.yaml -f venues/k8s/svc.yaml
-        wait_until_ready_selector: app=venues
+        kubectl: apply -f pool-monitor/k8s/deployment.yaml -f pool-monitor/k8s/svc.yaml
+        wait_until_ready_selector: app=pool-monitor
 
