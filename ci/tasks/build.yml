@@ -5,7 +5,7 @@ image_resource:
   source: {repository: maven, tag: 3.6.1-jdk-14}
 
 inputs:
-  - name: venues
+  - name: pool-monitor
 
 outputs:
   - name: build-output
@@ -14,4 +14,4 @@ caches:
   - path: maven
 
 run:
-  path: "venues/ci/tasks/build.sh"
+  path: "pool-monitor/ci/tasks/build.sh"
