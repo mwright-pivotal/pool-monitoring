@@ -9,7 +9,7 @@ image_resource:
     password: ((REGISTRY_PASSWORD))
 
 inputs:
-  - name: venues
+  - name: pool-monitor
 
 params:
   KUBECONFIG: 
@@ -17,4 +17,4 @@ params:
   SNYK_TOKEN:
 
 run:
-  path: "venues/ci/tasks/snyk.sh"
+  path: "pool-monitor/ci/tasks/snyk.sh"
