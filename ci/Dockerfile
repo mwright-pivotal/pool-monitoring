@@ -34,10 +34,10 @@ RUN wget -O- https://k14s.io/install.sh | bash
 
 ENV PATH $PATH:/root/google-cloud-sdk/bin
 
-ADD https://github.com/buildpack/pack/releases/download/v0.2.1/pack-v0.2.1-linux.tgz /tmp/
-RUN tar -C /usr/local/bin -xvzf /tmp/pack-v0.2.1-linux.tgz
+ADD https://github.com/buildpack/pack/releases/download/v0.5.0/pack-v0.5.0-linux.tgz /tmp/
+RUN tar -C /usr/local/bin -xvzf /tmp/pack-v0.5.0-linux.tgz
 
-COPY pb-linux-0.0.3-rc.41 /usr/local/bin/pb
+COPY pb-0.0.4-linux /usr/local/bin/pb
 RUN chmod a+x /usr/local/bin/pb
 
 RUN gcloud auth configure-docker

@@ -2,7 +2,7 @@ platform: linux
 
 image_resource:
   type: docker-image
-  source: {repository: gcr.io/fe-mwright/cruiseline/pack, tag: latest}
+  source: {repository: harbor.sys.pks.wrightcode.io/tools/clis, tag: latest}
 
 params:
   GOOGLE_TOKEN:
@@ -13,10 +13,10 @@ params:
   DOCKER_REGISTRY:
 
 inputs:
-  - name: venue
+  - name: pool-monitor
 
 outputs:
   - name: build-output
 
 run:
-  path: "venue/ci/tasks/pack.sh"
+  path: "pool-monitor/ci/tasks/pack.sh"

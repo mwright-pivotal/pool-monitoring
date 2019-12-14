@@ -161,11 +161,11 @@ stop_docker() {
 }
 
 start_docker
-cd venue
+cd pool-monitor
 pack set-default-builder cloudfoundry/cnb:bionic
-pack build venue -p .
+pack build pool-monitor -p .
 docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}" "${DOCKER_REGISTRY}"
-docker tag venue "${DOCKER_IMAGE}"
+docker tag pool-monitor "${DOCKER_IMAGE}"
 docker push "${DOCKER_IMAGE}"
 echo "Writing to kubebconfig file: " + ${KUBE_CONFIG}
 echo ${KUBE_CONFIG} >> ../build-output/kube-config

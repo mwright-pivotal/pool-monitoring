@@ -1,5 +1,5 @@
 #!/bin/sh
 set -e
-cd venues
+cd pool-monitor
 #snyk test
 snyk monitor

@@ -13,10 +13,10 @@ params:
   DOCKER_REGISTRY:
 
 inputs:
-  - name: venue
+  - name: pool-monitor
 
 outputs:
   - name: build-output
 
 run:
-  path: "venue/ci/tasks/pack.sh"
+  path: "pool-monitor/ci/tasks/pack.sh"
