@@ -58,7 +58,7 @@ jobs:
           type: registry-image
           source: 
             repository: harbor.sys.pks.wrightcode.io/tools/lcycle-task
-            tag: latest
+            tag: cflinuxfs3
             username: ((docker-username))
             password: ((docker-password))
         params:
