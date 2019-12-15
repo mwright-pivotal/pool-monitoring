@@ -57,7 +57,7 @@ jobs:
         image_resource:
           type: registry-image
           source: 
-            repository: mwrightregistry.azurecr.io/lcycle-task
+            repository: harbor.sys.pks.wrightcode.io/tools/lcycle-task
             tag: latest
             username: ((docker-username))
             password: ((docker-password))
