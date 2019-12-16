@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: venue-cfg
+  labels:
+    app: venue
+data:
+  SERVER_PORT: 8080

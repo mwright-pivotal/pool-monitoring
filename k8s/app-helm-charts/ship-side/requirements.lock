@@ -1,0 +1,6 @@
+dependencies:
+- name: venue
+  repository: file://../venue
+  version: 0.0.1
+digest: sha256:14881a615fc9d997fbdcb8a87742abc48c8a06a5624d3666445fce20ae6dcd64
+generated: 2019-06-20T15:59:47.773530784-04:00
