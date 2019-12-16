@@ -27,7 +27,7 @@ jobs:
       trigger: true
     - task: test
       file: pool-monitor/ci/tasks/build.yml
-
+   
   - name: Vulnerability Scan using Snyk
     serial: true
     public: true
@@ -75,6 +75,7 @@ jobs:
         caches:
           - path: /layers
           - path: /cache
+          - path: /maven
           
   - name: Deploy to PKS (kapp)
     serial: true
@@ -85,7 +86,7 @@ jobs:
       passed:
         - Dockerize with CNB
     - task: kapp deploy
-      file: venues/ci/tasks/kapp.yml
+      file: pool-monitor/ci/tasks/kapp.yml
       params:
         KUBECONFIG_CONTENTS: ((kube-config-pks))
       vars:
