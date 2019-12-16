@@ -12,6 +12,8 @@ outputs:
 
 caches:
   - path: maven
+  - path: cache
+  - path: layers
 
 run:
   path: "pool-monitor/ci/tasks/build.sh"

@@ -50,7 +50,7 @@ jobs:
       trigger: true
       passed: 
         - Build & Test
-    - task: build-concourse-lifecycle-task-bionic-image
+    - task: build-concourse-lifecycle-task-cflinuxfs3-image
       privileged: true
       config:
         platform: linux

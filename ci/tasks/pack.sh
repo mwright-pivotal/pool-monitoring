@@ -162,7 +162,7 @@ stop_docker() {
 
 start_docker
 cd pool-monitor
-pack set-default-builder cloudfoundry/cnb:bionic
+pack set-default-builder cloudfoundry/cnb:cflinuxfs3
 pack build pool-monitor -p .
 docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}" "${DOCKER_REGISTRY}"
 docker tag pool-monitor "${DOCKER_IMAGE}"
