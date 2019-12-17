@@ -6,4 +6,4 @@ echo "------- KUBECONFIG ---------------------"
 echo "$KUBECONFIG_CONTENTS" 
 echo "$KUBECONFIG_CONTENTS" > ~/.kube/config
 set -x
-kapp deploy -a pool-monitor -f pool-monitor/k8s/deployment.yaml -c -y
+kapp deploy -a pool-monitor -f pool-monitor/k8s/ -c -y

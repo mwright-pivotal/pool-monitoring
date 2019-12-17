@@ -1,7 +1,0 @@
-team: wrightcode-team
-source:
-  git:
-    url: https://github.com/mwright-pivotal/cruiseline-venues/releases/venue-0.0.1-SNAPSHOT.jar
-    revision: master
-image:
-  tag: mwrightregistry.azurecr.io/cruiseline-venues
