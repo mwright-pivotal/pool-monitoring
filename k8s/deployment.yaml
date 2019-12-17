@@ -5,12 +5,12 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: venue
+      app: pool-monitor
   replicas: 3 # tells deployment to run 3 pods matching the template
   template: # create pods using pod definition in this template
     metadata:
       labels:
-        app: venue
+        app: pool-monitor
     spec:
       containers:
       - name: pool-monitor
