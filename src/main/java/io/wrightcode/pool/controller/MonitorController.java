@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.wrightcode.pool.model.Status;
+import io.wrightcode.pool.persistence.WaterConditionRepository;
 
 @RestController("MonitorController")
 @RequestMapping("v1/api")
@@ -24,6 +24,9 @@ public class MonitorController {
 	MeterRegistry meterRegistry;
 	private AtomicLong ph = new AtomicLong(0);
 	
+	@Autowired
+	WaterConditionRepository repository;
+	
 	@RequestMapping(value="/status", method = RequestMethod.POST)
 	public void sendStatus(@RequestBody Status stat) {
 		stat.setTimeUpdated(new Date());
@@ -31,5 +34,7 @@ public class MonitorController {
 		AtomicLong customGauge = meterRegistry.gauge("phValue", this.ph);
 		customGauge.set(Long.parseLong(stat.getPhValue()));
 		//customGauge.getAndSet(Long.parseLong(stat.getPhValue()));
+		
+		repository.save(stat);
 	}
 }
