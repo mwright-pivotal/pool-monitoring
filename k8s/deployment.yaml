@@ -20,8 +20,8 @@ spec:
           name: server
         - containerPort: 8081
           name: management
-      - env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: gpdb
+        envFrom:
+          - configMapRef:
+              name: pool_monitor_config
       imagePullSecrets:
       - name: harbor-regcred
