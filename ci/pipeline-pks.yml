@@ -17,7 +17,15 @@ resources:
     source:
       kubeconfig: ((kube-config-aks))
       context: pbs-dev
-
+  - name: pcf-dev
+    type: cf
+    source:
+      api: ((cf-api))
+      username: ((cf-username))
+      password: ((cf-password))
+      organization: ((cf-org))
+      space: ((cf-space))
+      skip_cert_check: false
 jobs:
   - name: Build & Test
     serial: true
@@ -27,6 +35,9 @@ jobs:
       trigger: true
     - task: test
       file: pool-monitor/ci/tasks/build.yml
+    - put: pcf-dev
+      params:
+        manifest: build-output/manifest.yml
    
   - name: Vulnerability Scan using Snyk
     serial: true
