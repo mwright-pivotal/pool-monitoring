@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private RequestMatcher examplesRequestMatcher() {
-        return (request) -> request.getServletPath().equals("/status") ||
+        return (request) -> request.getServletPath().equals("/v1/api") ||
         		request.getServletPath().equals("/actuator/**");
     }
 }
