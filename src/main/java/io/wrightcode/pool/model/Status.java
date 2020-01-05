@@ -42,9 +42,11 @@ public class Status implements Serializable {
 	@Column(name="time_updated")
 	Date timeUpdated;
 	
-	public Status(String monitorUUID, String phValue, String orpValue) {
+	public Status(String monitorUUID, String phValue, String orpValue, String tdsValue) {
 		this.monitorUUID = monitorUUID;
 		this.phValue = phValue;
+		this.orpValue = orpValue;
+		this.tdsValue = tdsValue;
 		this.timeUpdated = new Date();
 	}
 	
@@ -81,6 +83,6 @@ public class Status implements Serializable {
 		this.textStatus = textStatus;
 	}
 	public String toString() {
-		return (new Timestamp(timeUpdated.getTime())) + " : " + monitorUUID + ": " + phValue + " : " + orpValue + " : " + tdsValue;
+		return (new Timestamp(timeUpdated.getTime())) + " : " + monitorUUID + ": " + phValue + " :" + orpValue + " :" + tdsValue;
  	}
 }
