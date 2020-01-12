@@ -1,5 +1,6 @@
 package io.wrightcode.pool.controller;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.micrometer.core.instrument.MeterRegistry;
+import io.wrightcode.pool.model.AtomicFloat;
 import io.wrightcode.pool.model.Status;
 import io.wrightcode.pool.persistence.WaterConditionRepository;
 
@@ -22,7 +24,7 @@ public class MonitorController {
 	
 	@Autowired
 	MeterRegistry meterRegistry;
-	private AtomicLong ph = new AtomicLong(0);
+	private AtomicFloat ph = new AtomicFloat(0);
 	
 	@Autowired
 	WaterConditionRepository repository;
@@ -31,8 +33,8 @@ public class MonitorController {
 	public void sendStatus(@RequestBody Status stat) {
 		stat.setTimeUpdated(new Date());
 		log.info("Received update: " + stat);
-		AtomicLong customGauge = meterRegistry.gauge("phValue", this.ph);
-		customGauge.set(Long.parseLong(stat.getPhValue()));
+		AtomicFloat customGauge = meterRegistry.gauge("phValue", this.ph);
+		customGauge.set(Float.parseFloat(stat.getPhValue()));
 		//customGauge.getAndSet(Long.parseLong(stat.getPhValue()));
 		
 		repository.save(stat);

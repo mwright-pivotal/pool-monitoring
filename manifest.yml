@@ -3,8 +3,6 @@ applications:
   - name: pool-monitor
     memory: 768M
     random-route: true
-    buildpack: java_buildpack_offline
     path: PoolMonitor-0.0.1-SNAPSHOT.jar
     env:
-      SPRING_PROFILES_ACTIVE: cloud
-      
+      SPRING_PROFILES_ACTIVE: cloud,gpdb
