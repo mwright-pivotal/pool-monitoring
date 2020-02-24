@@ -2,7 +2,10 @@
 applications:
   - name: pool-monitor
     memory: 768M
-    random-route: true
-    path: PoolMonitor-0.0.1-SNAPSHOT.jar
+    random-route: false
+    path: target/PoolMonitor-0.0.1-SNAPSHOT.jar
     env:
       SPRING_PROFILES_ACTIVE: cloud,gpdb
+      SPRING_DATASOURCE_USERNAME: "postgres"
+      SPRING_DATASOURCE_PASSWORD: "p1v0tal"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://10.0.1.200:5432/postgres"
