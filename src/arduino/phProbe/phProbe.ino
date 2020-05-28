@@ -37,6 +37,9 @@ int tdsBufferTemp[ArrayLenth];
 int tdsBufferIndex = 0,copyIndex = 0;
 float averageVoltage = 0,tdsValue = 0,temperature = 25;
 
+const String statusText1 = "signal strength (RSSI): ";
+const String statusText2 = " dBm";
+
 double ORP_Value;
 
 int ORP_Array[ArrayLenth];
@@ -49,12 +52,12 @@ int keyIndex = 0;            // your network key Index number (needed only for W
 
 int status = WL_IDLE_STATUS;
 
+// server address:
+char server[] = "pool-monitor.apps.cf4k8s.wrightcode.io";
+//IPAddress server(64,131,82,241);
 // Initialize the Wifi client library
 WiFiSSLClient wifi;
-
-// server address:
-char server[] = "pool.apps.pas.wrightcode.io";
-//IPAddress server(64,131,82,241);
+HttpClient httpClient = HttpClient(wifi, server, 443);
 
 unsigned long lastConnectionTime = 0;            // last time you connected to the server, in milliseconds
 const unsigned long postingInterval = 30L * 1000L; // delay between updates, in milliseconds
@@ -96,7 +99,7 @@ void loop() {
 
   static unsigned long samplingTime = millis();
   static float pHValue,pHVoltage;
-  char buff[10];
+  char buff[11];
   
   // if there's incoming data from the net connection.
   // send it out the serial port.  This is for debugging
@@ -134,7 +137,7 @@ void loop() {
   // then connect again and send data:
   if (millis() - lastConnectionTime > postingInterval) {
     JSONVar myObject;
-    myObject["monitorUUID"] = "ph1234";
+    myObject["monitorUUID"] = "2050Windfaire";
     
     
     Serial.print("Voltage:");
@@ -142,18 +145,29 @@ void loop() {
     Serial.print("    pH value: ");
     Serial.print(pHValue,2);
     Serial.print(" orp value: ");
-    Serial.println((int)ORP_Value);
+    Serial.println((float)ORP_Value);
     Serial.print("TDS Value:");
     Serial.print(tdsValue,0);
     Serial.println("ppm");
     digitalWrite(LED,digitalRead(LED)^1);
-    dtostrf(pHValue, 4, 6, buff);  //4 is mininum width, 6 is precision
 
+    buff[0] = '\0';
+    dtostrf(pHValue, 4, 6, buff);  //4 is mininum width, 6 is precision
     myObject["phValue"] = buff;
+
+    buff[0] = '\0';
     dtostrf((int)ORP_Value, 4, 6, buff);
     myObject["orpValue"] = buff;
+
+    buff[0] = '\0';
     dtostrf((int)tdsValue, 4, 6, buff);
     myObject["tdsValue"] = buff;
+
+    // print the received signal strength:
+    long rssi = WiFi.RSSI();
+    buff[0] = '\0';
+    dtostrf((int)rssi, 4, 6, buff);
+    myObject["textStatus"] =  statusText1 + buff + statusText2;
 
     String jsonString = JSON.stringify(myObject);
     httpRequest(jsonString);
@@ -163,10 +177,10 @@ void loop() {
 
 // this method makes a HTTP connection to the server:
 void httpRequest(String status) {
-  HttpClient client = HttpClient(wifi, server, 443);
+  
   // close any connection before send a new request.
   // This will free the socket on the Nina module
-  client.stop();
+  httpClient.stop();
 
   // if there's a successful connection:
   
@@ -175,11 +189,11 @@ void httpRequest(String status) {
   // send the HTTP PUT request:
   String contentType = "application/json";
   String postData = status;
-  client.post("/v1/api/status", contentType, postData);
+  httpClient.post("/v1/api/status", contentType, postData);
 
     // read the status code and body of the response
-  int statusCode = client.responseStatusCode();
-  String response = client.responseBody();
+  int statusCode = httpClient.responseStatusCode();
+  String response = httpClient.responseBody();
 
   Serial.print("Status code: ");
   Serial.println(statusCode);

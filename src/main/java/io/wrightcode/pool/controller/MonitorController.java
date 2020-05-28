@@ -1,8 +1,6 @@
 package io.wrightcode.pool.controller;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics;
+import io.micrometer.core.instrument.binder.jvm.DiskSpaceMetrics;
 import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics;
 import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics;
 import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics;
 import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
+import io.micrometer.core.instrument.binder.tomcat.TomcatMetrics;
+import io.micrometer.wavefront.WavefrontMeterRegistry;
 import io.wrightcode.pool.model.AtomicFloat;
-import io.wrightcode.pool.model.Status;
+import io.wrightcode.pool.model.PoolTelemetry;
 import io.wrightcode.pool.persistence.WaterConditionRepository;
 
 @RestController("MonitorController")
@@ -30,6 +31,7 @@ public class MonitorController {
 	Logger log = Logger.getLogger(MonitorController.class.getName());
 	
 	MeterRegistry meterRegistry;
+	
 	private AtomicFloat ph = new AtomicFloat(0);
 	private AtomicFloat tds = new AtomicFloat(0);
 	private AtomicFloat orp = new AtomicFloat(0);
@@ -47,23 +49,31 @@ public class MonitorController {
 		new JvmGcMetrics().bindTo(meterRegistry);
 		new ProcessorMetrics().bindTo(meterRegistry);
 		new JvmThreadMetrics().bindTo(meterRegistry);
+		
+		//new DiskSpaceMetrics().bindTo(meterRegistry);
+		//new TomcatMetrics().bindTo(meterRegistry);
 	}
 	
 	@RequestMapping(value="/status", method = RequestMethod.POST)
-	public void sendStatus(@RequestBody Status stat) {
+	public void sendStatus(@RequestBody PoolTelemetry stat) {
 		stat.setTimeUpdated(new Date());
 		log.info("Received update: " + stat);
 		AtomicFloat phGauge = meterRegistry.gauge("watercondition.phValue", this.ph);
-		phGauge.set(Float.parseFloat(stat.getPhValue()));
+		phGauge.set(stat.getPhValue().floatValue());
 		
 		AtomicFloat orpGauge = meterRegistry.gauge("watercondition.orpValue", this.orp);
-		orpGauge.set(Float.parseFloat(stat.getOrpValue()));
+		orpGauge.set(stat.getOrpValue().floatValue());
 		
 		AtomicFloat tdsGauge = meterRegistry.gauge("watercondition.tdsValue", this.tds);
-		tdsGauge.set(Float.parseFloat(stat.getTdsValue()));
+		tdsGauge.set(stat.getTdsValue().floatValue());
 		//customGauge.getAndSet(Long.parseLong(stat.getPhValue()));
 		counter.increment();
 		
 		repository.save(stat);
+	}
+	
+	@RequestMapping(value="/recent", method = RequestMethod.GET)
+	public Iterable<PoolTelemetry> getRecent() {
+		return repository.findAll();
 	}
 }

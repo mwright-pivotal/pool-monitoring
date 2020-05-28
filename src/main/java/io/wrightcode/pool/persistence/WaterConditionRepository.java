@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import io.wrightcode.pool.model.Status;
+import io.wrightcode.pool.model.PoolTelemetry;
 
-public interface WaterConditionRepository extends CrudRepository<Status, Long> {
-	List<Status> findByMonitorUUID(String monitorUUID);
+public interface WaterConditionRepository extends CrudRepository<PoolTelemetry, Long> {
+	List<PoolTelemetry> findByMonitorUUID(String monitorUUID);
 }

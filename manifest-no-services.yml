@@ -5,10 +5,8 @@ applications:
     random-route: false
     path: target/PoolMonitor-0.0.1-SNAPSHOT.jar
     env:
-      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_DATASOURCE_USERNAME: yugabyte
       SPRING_DATASOURCE_PASSWORD: yugabyte
       SPRING_PROFILES_ACTIVE: cloud,gpdb
       SPRING_DATASOURCE_URL: "jdbc:postgresql://10.0.1.3:5433/yugabyte"
-    services:
-    - to-metrics

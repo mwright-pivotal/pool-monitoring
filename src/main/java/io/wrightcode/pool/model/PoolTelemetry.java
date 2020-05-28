@@ -11,7 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Status implements Serializable {
+public class PoolTelemetry implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -29,24 +29,32 @@ public class Status implements Serializable {
 	String monitorUUID = "";
 	String textStatus = "";
 	@Column(name="ph")
-	String phValue = "";
+	Double phValue = 0.0;
 	@Column(name="tds")
-	String tdsValue = "";
-	public String getTdsValue() {
+	Double tdsValue = 0.0;
+	public Double getTdsValue() {
 		return tdsValue;
 	}
 
-	public void setTdsValue(String tdsValue) {
+	public void setTdsValue(Double tdsValue) {
 		this.tdsValue = tdsValue;
 	}
 	@Column(name="time_updated")
 	Date timeUpdated;
 	
-	public Status(String monitorUUID, String phValue, String orpValue, String tdsValue) {
+	public PoolTelemetry(String monitorUUID, Double phValue, Double orpValue, Double tdsValue) {
 		this.monitorUUID = monitorUUID;
 		this.phValue = phValue;
 		this.orpValue = orpValue;
 		this.tdsValue = tdsValue;
+		this.timeUpdated = new Date();
+	}
+	
+	public PoolTelemetry() {
+		this.monitorUUID = "not set";
+		this.phValue = 0.0;
+		this.orpValue = 0.0;
+		this.tdsValue = 0.0;
 		this.timeUpdated = new Date();
 	}
 	
@@ -56,20 +64,20 @@ public class Status implements Serializable {
 	public void setTimeUpdated(Date timeUpdated) {
 		this.timeUpdated = timeUpdated;
 	}
-	public String getPhValue() {
+	public Double getPhValue() {
 		return phValue;
 	}
-	public void setPhValue(String phValue) {
+	public void setPhValue(Double phValue) {
 		this.phValue = phValue;
 	}
-	public String getOrpValue() {
+	public Double getOrpValue() {
 		return orpValue;
 	}
-	public void setOrpValue(String orpValue) {
+	public void setOrpValue(Double orpValue) {
 		this.orpValue = orpValue;
 	}
 	@Column(name="orp_value")
-	String orpValue = "";
+	Double orpValue = 0.0;
 	public String getMonitorUUID() {
 		return monitorUUID;
 	}

@@ -18,7 +18,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	Logger log = Logger.getLogger(MonitorController.class.getName());
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/v1/api/status").permitAll()
+        http.authorizeRequests().antMatchers("/v1/api/status","/v2/api-docs", 
+                "/swagger-resources/**",  
+                "/swagger-ui.html", 
+                "/webjars/**", "/v1/api/recent").permitAll()
                 .requestMatchers(examplesRequestMatcher()).permitAll()
                 .and().authorizeRequests()
                 .requestMatchers((request) -> request.getServletPath().equals("/")).permitAll()
@@ -35,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private RequestMatcher examplesRequestMatcher() {
         return (request) -> request.getServletPath().equals("/v1/api/status") ||
-        		request.getServletPath().equals("/actuator/**");
+        		request.getServletPath().equals("/actuator/**") ||
+        		request.getServletPath().equals("/v2/**");
     }
 }
