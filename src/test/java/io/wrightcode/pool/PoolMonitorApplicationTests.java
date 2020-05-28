@@ -1,6 +1,7 @@
 package io.wrightcode.pool;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,6 +47,12 @@ public class PoolMonitorApplicationTests {
 				.content(objectMapper.writeValueAsString(waterCondition))).andExpect(status().isOk());
 		
 		assertThat(repository.findAll().iterator().hasNext());
+	}
+	
+	@Test
+	public void getRecents() throws Exception {
+		mockMvc.perform(get("/v1/api/recent", 42L).
+				contentType("application/json")).andExpect(status().isOk());
 	}
 
 }
