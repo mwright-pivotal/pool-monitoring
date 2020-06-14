@@ -74,6 +74,6 @@ public class MonitorController {
 	
 	@RequestMapping(value="/recent", method = RequestMethod.GET)
 	public Iterable<PoolTelemetry> getRecent() {
-		return repository.findAll();
+		return repository.findTop100ByOrderByTimeUpdatedDesc();
 	}
 }
