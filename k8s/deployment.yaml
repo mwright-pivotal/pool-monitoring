@@ -24,4 +24,4 @@ spec:
           - configMapRef:
               name: pool-monitor-config
       imagePullSecrets:
-      - name: harbor-regcred
+      - name: app-registry-credentials
