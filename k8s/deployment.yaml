@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: pool-monitor
-        image: harbor.sys.pks.wrightcode.io/apps/pool-monitor:latest
+        image: harbor.sys.pks.wrightcode.io/tas-apps/48dac565-9390-421f-9cc3-4d3b1a9ac083:latest
         ports:
         - containerPort: 8080
           name: server
